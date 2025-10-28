@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
+#include <iostream>
 
 //Globals
 // The main window class name.
@@ -46,11 +47,7 @@ int WINAPI WinMain(
 		return 1;
 	}
 
-	HWND myconsole = GetConsoleWindow();
-	//Get a handle to device context
-	HDC mydc = GetDC(myconsole);
-	SetPixel(mydc, 10, 10, RGB(255, 0, 0)); // Example usage of SetPixel
-	SetPixel(mydc, 11, 10, RGB(255, 0, 0)); // Example usage of SetPixel
+	
 
 	// The parameters to CreateWindowEx explained:
 	// WS_EX_OVERLAPPEDWINDOW : An optional extended window style.
@@ -92,14 +89,26 @@ int WINAPI WinMain(
 		nCmdShow);
 	UpdateWindow(hWnd);
 
-	MSG msg;
+	HWND myconsole = GetConsoleWindow();
+	//Get a handle to device context
+	HDC mydc = GetDC(myconsole);
+	SetPixel(mydc, 10, 10, RGB(255, 0, 0)); // Example usage of SetPixel
+	std::pair<int, int> center = { 500,250 };
+	while (true) {
+		int radius = 100;
+		bool success = Ellipse(mydc, center.first - radius, center.second - radius, center.first + radius, center.second + radius); //Test ellipse
+	}
+	UpdateWindow(hWnd);
+
+	/*MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-	}
+	}*/
 
-	return (int)msg.wParam;
+	//return (int)msg.wParam;
+	return 0;
 };
 
 LRESULT CALLBACK WndProc(
