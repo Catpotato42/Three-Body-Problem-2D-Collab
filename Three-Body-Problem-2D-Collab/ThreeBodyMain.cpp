@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <iostream>
+#include <gdiplus.h>
 
 //Globals
 // The main window class name.
@@ -13,7 +14,13 @@ static TCHAR szTitle[] = _T("I'm a window!");
 HINSTANCE hInst;
 
 // Forward declarations of functions included in this code module:
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK ProcessMessages(HWND, UINT, WPARAM, LPARAM);
+VOID OnPaint(HDC hdc)
+{
+	Gdiplus::Graphics graphics(hdc);
+	Gdiplus::Pen      pen(Gdiplus::Color(255, 0, 0, 255));
+	graphics.DrawLine(&pen, 0, 0, 200, 100);
+}
 
 
 int WINAPI WinMain(
@@ -23,10 +30,12 @@ int WINAPI WinMain(
 	_In_ int       nCmdShow
 ) {
 	WNDCLASSEX wcex;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR           gdiplusToken;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
+	wcex.lpfnWndProc = ProcessMessages;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
@@ -46,9 +55,6 @@ int WINAPI WinMain(
 
 		return 1;
 	}
-
-	
-
 	// The parameters to CreateWindowEx explained:
 	// WS_EX_OVERLAPPEDWINDOW : An optional extended window style.
 	// szWindowClass: the name of the application
@@ -72,80 +78,49 @@ int WINAPI WinMain(
 		hInstance,
 		NULL
 	);
-	if (!hWnd)
-	{
-		MessageBox(NULL,
-			_T("Call to CreateWindowEx failed!"),
-			_T("Windows Desktop Guided Tour"),
-			NULL);
-
-		return 1;
-	}
-
-	// The parameters to ShowWindow explained:
-	// hWnd: the value returned from CreateWindowEx
-	// nCmdShow: the fourth parameter from WinMain
-	ShowWindow(hWnd,
-		nCmdShow);
+	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	HWND myconsole = GetConsoleWindow();
 	//Get a handle to device context
 	HDC mydc = GetDC(myconsole);
-	SetPixel(mydc, 10, 10, RGB(255, 0, 0)); // Example usage of SetPixel
-	std::pair<int, int> center = { 500,250 };
-	while (true) {
-		int radius = 100;
-		bool success = Ellipse(mydc, center.first - radius, center.second - radius, center.first + radius, center.second + radius); //Test ellipse
-	}
-	UpdateWindow(hWnd);
 
-	/*MSG msg;
+
+	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-	}*/
-
-	//return (int)msg.wParam;
-	return 0;
+	}
+	Gdiplus::GdiplusShutdown(gdiplusToken);
+	return (int)msg.wParam;
 };
 
-LRESULT CALLBACK WndProc(
+LRESULT CALLBACK ProcessMessages(
 	_In_ HWND   hWnd,
 	_In_ UINT   message,
 	_In_ WPARAM wParam,
 	_In_ LPARAM lParam
 ) {
-	PAINTSTRUCT ps;
-	HDC hdc;
-	TCHAR greeting[] = _T("Insert simulation here");
+	HDC          hdc;
+	PAINTSTRUCT  ps;
+	std::pair<int, int> center = { 500,250 };
+	int radius = 100;
 
 	switch (message)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-
-		// Here your application is laid out.
-		// For this introduction, we just print out "Hello, Windows desktop!"
-		// in the top left corner.
-		TextOut(hdc,
-			5, 5,
-			greeting, _tcslen(greeting));
-		// End application-specific layout section.
-
+		OnPaint(hdc);
 		EndPaint(hWnd, &ps);
-		break;
+		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
-		break;
+		return 0;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
-		break;
 	}
 
 	return 0;
-
-
 };
 
