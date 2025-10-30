@@ -2,19 +2,22 @@
 #include <tchar.h>
 #include <iostream>
 #include <gdiplus.h>
-#pragma comment (lib,"Gdiplus.lib")
+#pragma comment (lib,"Gdiplus.lib") //tells linker to add gdiplus lib automatically
 
 //Globals
-// The main window class name.
+//The main window class name.
 static TCHAR szWindowClass[] = _T("NBodyApp");
-
-// The string that appears in the application's title bar.
+//Title bar text
 static TCHAR szTitle[] = _T("I'm a window!");
+//Time between frame updates (ms), can be changed during runtime? 17 ms = ~60 fps
+static const int frameTime = 17;
+//Array of radii given by Calculations.cpp file
 
-// Stored instance handle for use in Win32 API calls such as FindResource
+
+//Stored instance handle for use in Win32 API calls
 HINSTANCE hInst;
 
-// Forward declarations of functions included in this code module:
+//Forward declarations
 LRESULT CALLBACK ProcessMessages(HWND, UINT, WPARAM, LPARAM);
 VOID OnPaint(HDC hdc);
 
@@ -41,7 +44,10 @@ int WINAPI WinMain(
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
 
-	RegisterClassEx(&wcex);
+	if (!RegisterClassEx(&wcex)) {
+		return false;
+	}
+
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
 	HWND hWnd = CreateWindowEx(
@@ -63,10 +69,16 @@ int WINAPI WinMain(
 	//Get a handle to device context
 	HDC mydc = GetDC(myconsole);
 
+	SetTimer(hWnd, 0, // Handle to window, ID
+		frameTime,                 // 1000/fps timer interval
+		(TIMERPROC)NULL);     // no timer callback 
+
 
 	MSG msg;
+	//main loop
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
+		//Function that runs 60 fps: 17 ms is ~60 fps
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -82,8 +94,7 @@ LRESULT CALLBACK ProcessMessages(
 ) {
 	HDC          hdc;
 	PAINTSTRUCT  ps;
-	std::pair<int, int> center = { 500,250 };
-	int radius = 100;
+
 
 	switch (message)
 	{
@@ -95,6 +106,8 @@ LRESULT CALLBACK ProcessMessages(
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
+	case WM_TIMER:
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -108,3 +121,4 @@ VOID OnPaint(HDC hdc)
 	Gdiplus::Pen      pen(Gdiplus::Color(255, 0, 0, 255));
 	graphics.DrawLine(&pen, 0, 0, 200, 100);
 }
+
