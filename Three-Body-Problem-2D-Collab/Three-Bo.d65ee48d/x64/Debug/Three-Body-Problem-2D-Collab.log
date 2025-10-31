@@ -1,2 +1,31 @@
 ﻿  Calculations.cpp
-  Three-Body-Problem-2D-Collab.vcxproj -> C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\x64\Debug\Three-Body-Problem-2D-Collab.exe
+  test.cpp
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(56,55): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'Calculations.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(57,55): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'Calculations.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(60,66): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'Calculations.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(61,66): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'Calculations.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(56,55): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'test.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(57,55): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'test.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(60,66): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'test.cpp')
+  
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(61,66): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'test.cpp')
+  
+  ThreeBodyMain.cpp
+C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(84,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+  Generating Code...
+  LINK : C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\x64\Debug\Three-Body-Problem-2D-Collab.exe not found or not built by the last incremental link; performing full link
+  Three-Body-Problem-2D-Collab.vcxproj -> C:\Users\awbur\OneDrive\Documents\GitHub\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\x64\Debug\Three-Body-Problem-2D-Collab.exe
