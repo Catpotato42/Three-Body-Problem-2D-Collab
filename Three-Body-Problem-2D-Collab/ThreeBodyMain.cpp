@@ -19,16 +19,22 @@ std::vector<HWND> planetInputBoxes; //x-pos, y-pos, x-vel, y-vel, mass
 //Old edit proc for subclassed edit control
 std::vector<WNDPROC> oldProcs;
 HWND hStartSimButton;
+//Frame tracker in top left
+HWND hFrameTracker;
 //number of planets
 int numPlanets;
 //Time between frame updates (ms), can be changed during runtime? 17 ms = ~60 fps
 int frameTime;
 //Sim length (ms)
 float simLength;
+//total steps
+int totalSteps;
+int currStep;
 //Window dimensions
-static int windowLength;
-static int windowHeight;
-static int centerX; //used for initial screen && error msg positioning
+int windowLength;
+int windowHeight;
+int centerX; //used for initial screen && error msg positioning
+int centerY; //used for testing
 //Current phase tracker
 enum phaseTracker { CREATION, INITIALVALS, SIMULATION, PAUSED};
 phaseTracker currPhase = CREATION;
@@ -50,6 +56,7 @@ bool DestroyIfValid();
 bool IsValidInitialValues(HWND hWnd);
 void CreatePlanetInitialValues(HWND hWnd);
 void StartSimulation(HWND hWnd);
+void EndSimulation(HWND hWnd);
 
 int WINAPI WinMain(
 	_In_ HINSTANCE hInstance,
@@ -80,6 +87,7 @@ int WINAPI WinMain(
 	windowLength = GetSystemMetrics(SM_CXFULLSCREEN);
 	windowHeight = GetSystemMetrics(SM_CYFULLSCREEN);
 	centerX = windowLength / 2 - 110; //110 is half of total width of initial boxes
+	centerY = windowHeight / 2;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
 	HWND hWnd = CreateWindowEx(
@@ -96,6 +104,7 @@ int WINAPI WinMain(
 	);
 	ShowWindow(hWnd, SW_MAXIMIZE);
 	UpdateWindow(hWnd);
+	AllocConsole();
 
 	HWND myconsole = GetConsoleWindow();
 	//Get a handle to device context
@@ -139,19 +148,24 @@ LRESULT CALLBACK ProcessMessages(
 		return 1; //1 for success
 	}
 	case WM_PAINT:
-		if (currPhase == SIMULATION) {
-			hdc = BeginPaint(hWnd, &ps);
-			OnPaint(hdc);
-			EndPaint(hWnd, &ps);
-		}
+		hdc = BeginPaint(hWnd, &ps);
+		OnPaint(hdc);
+		EndPaint(hWnd, &ps);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	case WM_TIMER:
 		//Function that runs 60 fps: 17 ms is ~60 fps
-		InvalidateRect(hWnd, NULL, FALSE);
-		UpdateWindow(); //calls for an immediate repaint
+		currStep++;
+		if (currStep < totalSteps) {
+			InvalidateRect(hWnd, NULL, FALSE);
+			UpdateWindow(hWnd); //calls for an immediate repaint
+		}
+		else {
+			currPhase = PAUSED;
+			EndSimulation(hWnd);
+		}
 		//draw next frame
 		return 0;
 	case WM_COMMAND: {
@@ -169,6 +183,9 @@ LRESULT CALLBACK ProcessMessages(
 			bool nextPhase = IsValidInitialValues(hWnd); //iterate through every edit ctrl and check if vals are valid
 			if (nextPhase) {
 				StartSimulation(hWnd);
+				hFrameTracker = CreateWindowEx(0, L"STATIC", L"Current Frame: " + currStep, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
+					0, 0, 120, 25, hWnd, (HMENU)1, NULL, NULL);
+				currPhase = SIMULATION; //after bc can't draw w/out knowing output values
 			}
 		}
 		return 0;
@@ -182,6 +199,17 @@ LRESULT CALLBACK ProcessMessages(
 
 void OnPaint(HDC hdc)
 {
+	if (currPhase == SIMULATION) {
+		char messageBfr[256] = "got here";
+		HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+		WriteConsole(consoleHandle, messageBfr, (DWORD)256, NULL, NULL);
+		int radius = 60;
+		HBRUSH hCurrBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
+		HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hCurrBrush);
+		Ellipse(hdc, centerX + 110 - radius, centerY - radius, centerX + 110 + radius, centerY + radius);
+		SelectObject(hdc, hOldBrush);
+		
+	}
 }
 
 LRESULT CALLBACK CustomEditProc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -333,6 +361,7 @@ bool DestroyIfValid() {
 		numPlanets = std::stoi(std::string(szBuf1));
 		frameTime = 1000 / std::stof(std::string(szBuf2));
 		simLength = 1000 * std::stof(std::string(szBuf3));
+		totalSteps = frameTime / simLength;
 		solveIVP = new Calculations(
 			numPlanets, frameTime, simLength
 		);
@@ -395,15 +424,15 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel.first, startingPixel.second + 105, 150, 35, hWnd, (HMENU)(i + 3), NULL, NULL);
 		planetLabels[i + 4] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" mass (in 10^24 kgs) (recommended 1-5 range):").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second + 140, 150, 35, hWnd, (HMENU)(i + 4), NULL, NULL);
-		planetInputBoxes[i] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i] = CreateWindow(L"EDIT", L"500", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second, 60, 35, hWnd, (HMENU)(i + 5), NULL, NULL);
-		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", L"500", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 35, 60, 35, hWnd, (HMENU)(i + 6), NULL, NULL);
-		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 70, 60, 35, hWnd, (HMENU)(i + 7), NULL, NULL);
-		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 105, 60, 35, hWnd, (HMENU)(i + 8), NULL, NULL);
-		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 140, 60, 35, hWnd, (HMENU)(i + 9), NULL, NULL);
 		//subclass each edit box
 		for (int j = 0; j < 5; j++) {
@@ -461,9 +490,8 @@ void StartSimulation(HWND hWnd) {
 	SetTimer(hWnd, 1, frameTime, (TIMERPROC)NULL);
 	DestroyWindow(hLabel1);
 	//store our intial values in initialVals vector then destroy the input boxes.
-	//Can't resize without constructing each PlanetInfo, so assign default balances
-	initialVals.assign(numPlanets, PlanetInfo(0, 0, 0.0f, 0.0f, 0.0f));
-	for (int i = 0; i < planetInputBoxes.size(); i++) {
+	initialVals.resize(numPlanets);
+	for (int i = 0; i < numPlanets; i++) {
 		int currInputIndex = i * 5;
 		char szBufXPos[2048];
 		char szBufYPos[2048];
@@ -490,11 +518,11 @@ void StartSimulation(HWND hWnd) {
 		DestroyWindow(hErrorMsg);
 	}
 	DestroyWindow(hStartSimButton);
-	solveIVP->setInitialValues(initialVals);
-	simulationResult = solveIVP->solve();
+	//solveIVP->setInitialValues(initialVals);
+	//simulationResult = solveIVP->solve();
 }
 
 void EndSimulation(HWND hWnd) {
-	currPhase = PAUSED;
 	KillTimer(hWnd, 1);
+	DestroyWindow(hFrameTracker);
 }

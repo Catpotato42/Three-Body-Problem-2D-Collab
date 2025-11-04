@@ -8,6 +8,9 @@
 struct PlanetInfo {
 	PlanetInfo(int xPos, int yPos, float xVel, float yVel, float mass) 
 	: xPos(xPos), yPos(yPos), xVel(xVel), yVel(yVel), mass(mass) {}
+
+	PlanetInfo() : xPos(0), yPos(0), xVel(0.0f), yVel(0.0f), mass(0.0f) {}
+
 	int xPos;
 	int yPos;
 	float xVel;
