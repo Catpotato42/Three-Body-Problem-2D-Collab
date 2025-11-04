@@ -1,6 +1,6 @@
-### N-Body-Simulation
+# N-Body-Simulation
 ## A two-dimensional graphical simulation of the n body problem in c++ using a initial value problem solver created from scratch as well as the win32 API library
-# Created by Alex Burns and Simon Harrington
+## Created by Alex Burns and Simon Harrington
 # Use instructions
 Input a number of planets, desired fps (simulation speed), and simulation length.
 Then, enter initial values (x-pos, y-pos, x-vel, y-vel, mass) for each planet and begin the simulation. 
