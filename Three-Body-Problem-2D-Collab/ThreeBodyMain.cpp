@@ -192,7 +192,7 @@ LRESULT CALLBACK CustomEditProc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lPar
 		bool allowNeg = !(index % 5 == 0 || index % 5 == 1 || index % 5 == 4); //Negatives for velocity only
 		bool allowDecimal = (index % 5 == 2 || index % 5 == 3 || index % 5 == 4); //Decimals for velocity and mass only
 
-		if (isdigit(wParam) || wParam == VK_BACK)
+		if (isdigit((int)wParam) || wParam == VK_BACK)
 			return CallWindowProc(oldProcs[index], hEdit, msg, wParam, lParam);
 
 		if (allowDecimal && wParam == '.' && SendMessage(hEdit, WM_GETTEXTLENGTH, 0, 0) > 0)
@@ -352,35 +352,36 @@ void CreatePlanetInitialValues(HWND hWnd) {
 	startingPixel.second += 35; //move down for the inputs
 
 	for (int i = 0; i < numPlanets*5; i+=5) {
-		std::wstring number = std::to_wstring(i);
+		std::wstring number = std::to_wstring(i/5 + 1);
 		startingPixel = (startingPixel.second + 205 < clientHeight) ? std::pair<int,int> {startingPixel.first,startingPixel.second} 
 		: std::pair<int,int> {startingPixel.first + 220, 0}; //205 = 35*5 + 30 pixels button, 220 = length of label + input box + 10
-		planetLabels[i] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-position:").c_str(), WS_CHILD | WS_VISIBLE | ES_CENTER,
+		planetLabels[i] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second, 150, 35, hWnd, (HMENU)i, NULL, NULL);
-		planetLabels[i + 1] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-position:").c_str(), WS_CHILD | WS_VISIBLE | ES_CENTER,
-			startingPixel.first, startingPixel.second + 35, 150, 35, hWnd, (HMENU)i + 1, NULL, NULL);
-		planetLabels[i + 2] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-velocity:").c_str(), WS_CHILD | WS_VISIBLE | ES_CENTER,
-			startingPixel.first, startingPixel.second + 70, 150, 35, hWnd, (HMENU)i + 2, NULL, NULL);
-		planetLabels[i + 3] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-velocity:").c_str(), WS_CHILD | WS_VISIBLE | ES_CENTER,
-			startingPixel.first, startingPixel.second + 105, 150, 35, hWnd, (HMENU)i + 3, NULL, NULL);
-		planetLabels[i + 4] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" mass (in 10^24 kgs) (recommended 1-5 range):").c_str(), WS_CHILD | WS_VISIBLE | ES_CENTER,
-			startingPixel.first, startingPixel.second + 140, 150, 35, hWnd, (HMENU)i + 4, NULL, NULL);
+		planetLabels[i + 1] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
+			startingPixel.first, startingPixel.second + 35, 150, 35, hWnd, (HMENU)(i + 1), NULL, NULL);
+		planetLabels[i + 2] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-velocity:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
+			startingPixel.first, startingPixel.second + 70, 150, 35, hWnd, (HMENU)(i + 2), NULL, NULL);
+		planetLabels[i + 3] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-velocity:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
+			startingPixel.first, startingPixel.second + 105, 150, 35, hWnd, (HMENU)(i + 3), NULL, NULL);
+		planetLabels[i + 4] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" mass (in 10^24 kgs) (recommended 1-5 range):").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
+			startingPixel.first, startingPixel.second + 140, 150, 35, hWnd, (HMENU)(i + 4), NULL, NULL);
 		planetInputBoxes[i] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-			startingPixel.first + 150, startingPixel.second, 60, 35, hWnd, (HMENU)i + 5, NULL, NULL);
+			startingPixel.first + 150, startingPixel.second, 60, 35, hWnd, (HMENU)(i + 5), NULL, NULL);
 		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-			startingPixel.first + 150, startingPixel.second + 35, 60, 35, hWnd, (HMENU)i + 6, NULL, NULL);
+			startingPixel.first + 150, startingPixel.second + 35, 60, 35, hWnd, (HMENU)(i + 6), NULL, NULL);
 		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-			startingPixel.first + 150, startingPixel.second + 70, 60, 35, hWnd, (HMENU)i + 7, NULL, NULL);
+			startingPixel.first + 150, startingPixel.second + 70, 60, 35, hWnd, (HMENU)(i + 7), NULL, NULL);
 		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-			startingPixel.first + 150, startingPixel.second + 105, 60, 35, hWnd, (HMENU)i + 8, NULL, NULL);
+			startingPixel.first + 150, startingPixel.second + 105, 60, 35, hWnd, (HMENU)(i + 8), NULL, NULL);
 		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-			startingPixel.first + 150, startingPixel.second + 140, 60, 35, hWnd, (HMENU)i + 9, NULL, NULL);
+			startingPixel.first + 150, startingPixel.second + 140, 60, 35, hWnd, (HMENU)(i + 9), NULL, NULL);
 		//subclass each edit box
 		for (int j = 0; j < 5; j++) {
 			SetWindowLongPtr(planetInputBoxes[i + j], GWLP_USERDATA, i + j);
 			WNDPROC oldProc = (WNDPROC)SetWindowLongPtr(planetInputBoxes[i + j], GWLP_WNDPROC, (LONG_PTR)CustomEditProc);
 			oldProcs[i + j] = oldProc;
 		}
+		startingPixel.second += 205; //move down for next planet.
 	}
 	hStartSimButton = CreateWindow(L"BUTTON", L"Start Simulation", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
 		startingPixel.first, startingPixel.second + 180, 150, 25, hWnd, (HMENU)500, NULL, NULL);
