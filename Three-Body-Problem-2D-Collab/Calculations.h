@@ -6,6 +6,11 @@
 //both structs are small so don't strictly need their own header files, so included here for simplicity.
 //used in main file when user inputs initial values, is packaged into State struct.
 struct PlanetInfo {
+	PlanetInfo(int xPos, int yPos, float xVel, float yVel, float mass) 
+	: xPos(xPos), yPos(yPos), xVel(xVel), yVel(yVel), mass(mass) {}
+
+	PlanetInfo() : xPos(0), yPos(0), xVel(0.0f), yVel(0.0f), mass(0.0f) {}
+
 	float xPos;
 	float yPos;
 	float xVel;
@@ -25,12 +30,12 @@ struct State {
 class Calculations {
 public:
 	//initial constructor of our calculations, after this our values for each planet are set by user input.
-	Calculations(int planets, int fps, int simLength) //simLength in seconds
+	Calculations(int planets, int frameTime, int simLength) //simLength in ms
 		: initialState(planets) //construct initial state
 	{
 		this->planets = planets;
-		this->timeStep = 1000.0 / fps; //fps to ms
-		this->simLength = 1000.0 * simLength; //seconds to ms
+		this->timeStep = frameTime;
+		this->simLength = simLength;
 	};
 	//Function that sets initial values for each planet based on user input.
 	void setInitialValues(std::vector<PlanetInfo> initVals) {
