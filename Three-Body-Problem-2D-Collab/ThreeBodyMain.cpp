@@ -20,11 +20,13 @@ std::vector<HWND> planetInputBoxes; //x-pos, y-pos, x-vel, y-vel, mass
 //Old edit proc for subclassed edit control
 std::vector<WNDPROC> oldProcs;
 HWND hStartSimButton;
+//Restart
+HWND hRestartSimButton;
 //Frame tracker in top left
 HWND hFrameTracker;
 HWND hPositionDisplay;
 //conversion from meters to pixels, i.e 1 pixel = __ meters
-double metersPerPixel = 1e6;
+double metersPerPixel = 1e5;
 //number of planets
 int numPlanets;
 //Time between frame updates (ms), can be changed during runtime? 17 ms = ~60 fps
@@ -68,6 +70,7 @@ void CreatePlanetInitialValues(HWND hWnd);
 void StartSimulation(HWND hWnd);
 void EndSimulation(HWND hWnd);
 
+//stole this buffer from online somewhere
 void CreateBackBuffer(int width, int height)
 {
 	if (width <= 0 || height <= 0) return;
@@ -127,12 +130,6 @@ int WINAPI WinMain(
 	);
 	ShowWindow(hWnd, SW_MAXIMIZE);
 	UpdateWindow(hWnd);
-	AllocConsole();
-
-	HWND myconsole = GetConsoleWindow();
-	//Get a handle to device context
-	HDC mydc = GetDC(myconsole);
-
 	MSG msg;
 	//main loop
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -226,6 +223,12 @@ LRESULT CALLBACK ProcessMessages(
 				currPhase = SIMULATION; //after bc can't draw w/out knowing output values
 			}
 		}
+		else if (LOWORD(wParam) == 1000 && currPhase == PAUSED) {
+			DestroyWindow(hRestartSimButton);
+			currPhase = CREATION;
+			InvalidateRect(hWnd, NULL, TRUE);
+			CreateInitialWindows(hWnd);
+		}
 		return 0;
 	case WM_SIZE:
 		int w = LOWORD(lParam);
@@ -260,7 +263,7 @@ void OnPaint(HDC hdc)
 			for (int j = (currStep >= 50) ? currStep - 50 : 1; j < currStep; j++) {
 				if (j > 0) {
 					g_backG->DrawLine(planetPens[i].get(),
-						simulationResult[i][j - 1].first, simulationResult[i][j - 1].second, simulationResult[i][currStep].first, simulationResult[i][currStep].second);
+						simulationResult[i][j - 1].first, simulationResult[i][j - 1].second, simulationResult[i][j].first, simulationResult[i][j].second);
 				}
 			}
 			float cx = simulationResult[i][currStep].first;
@@ -480,7 +483,8 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel = (startingPixel.second + 205 < clientHeight) ? std::pair<int, int> {startingPixel.first, startingPixel.second}
 			: std::pair<int, int>{ startingPixel.first + 220, 0 }; //205 = 35*5 + 30 pixels button, 220 = length of label + input box + 10
 		}
-		swprintf(buffer, 256, L"%d", 100 + (i / 5) * 100);
+		swprintf(buffer, 256, L"%d", 300 + (i / 5) * 100);
+		//swprintf(buffer, 256, L"%d", 50000);
 		planetLabels[i] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second, 150, 35, hWnd, (HMENU)i, NULL, NULL);
 		planetLabels[i + 1] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
@@ -493,11 +497,11 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel.first, startingPixel.second + 140, 150, 35, hWnd, (HMENU)(i + 4), NULL, NULL);
 		planetInputBoxes[i] = CreateWindow(L"EDIT", buffer, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second, 60, 35, hWnd, (HMENU)(i + 5), NULL, NULL);
-		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", buffer, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", L"500", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 35, 60, 35, hWnd, (HMENU)(i + 6), NULL, NULL);
-		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L".1", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 70, 60, 35, hWnd, (HMENU)(i + 7), NULL, NULL);
-		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"5", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"90000", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 105, 60, 35, hWnd, (HMENU)(i + 8), NULL, NULL);
 		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"4", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 140, 60, 35, hWnd, (HMENU)(i + 9), NULL, NULL);
@@ -608,4 +612,6 @@ void EndSimulation(HWND hWnd) {
 	KillTimer(hWnd, 1);
 	DestroyWindow(hFrameTracker);
 	DestroyWindow(hPositionDisplay);
+	hRestartSimButton = CreateWindow(L"BUTTON", L"Restart", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+		centerX + 57, 115, 60, 30, hWnd, (HMENU)1000, NULL, NULL);
 }
