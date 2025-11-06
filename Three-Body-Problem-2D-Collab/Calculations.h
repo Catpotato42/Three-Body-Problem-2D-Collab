@@ -6,16 +6,16 @@
 //both structs are small so don't strictly need their own header files, so included here for simplicity.
 //used in main file when user inputs initial values, is packaged into State struct.
 struct PlanetInfo {
-	PlanetInfo(int xPos, int yPos, float xVel, float yVel, float mass) 
+	PlanetInfo(double xPos, double yPos, float xVel, float yVel, double mass) 
 	: xPos(xPos), yPos(yPos), xVel(xVel), yVel(yVel), mass(mass) {}
 
 	PlanetInfo() : xPos(0), yPos(0), xVel(0.0f), yVel(0.0f), mass(0.0f) {}
 
-	float xPos;
-	float yPos;
-	float xVel;
-	float yVel;
-	float mass; // >0, enforce this.
+	double xPos;
+	double yPos;
+	double xVel;
+	double yVel;
+	double mass; // >0, enforce this.
 };
 
 struct State {
@@ -42,6 +42,9 @@ public:
 		initialState.states = initVals;
 		std::cout << initialState.states[0].xPos << std::endl;
 	}
+	void setMetersPerPixel(double metersPerPixel) { this->metersPerPixel = metersPerPixel; }
+
+
 	//Function to step our ODE outputting an array of State structs for each timestep (using our state structs, time intervals, and simulation length).
 	std::vector<std::vector<std::pair<float, float>>> solve() {
 		std::vector<std::vector<std::pair<float, float>>> solution(planets);
@@ -67,7 +70,9 @@ public:
 				initialState.states[i].xPos += initialState.states[i].xVel * (timeStep / 1000.0);
 				initialState.states[i].yPos += initialState.states[i].yVel * (timeStep / 1000.0);
 				std::cout << "new position " << initialState.states[i].xPos << ", " << initialState.states[i].yPos << std::endl;
-				std::pair<float, float> insert(initialState.states[i].xPos, initialState.states[i].yPos);
+				float xPosPixel = initialState.states[i].xPos / metersPerPixel;
+				float yPosPixel = initialState.states[i].yPos / metersPerPixel;
+				std::pair<float, float> insert(xPosPixel, yPosPixel);
 				solution[i].push_back(insert);
 			}
 			
@@ -75,12 +80,12 @@ public:
 		return solution;
 	}
 private:
-	//struct holding an array of planet infos.
-	double G = 6.67430; //gravitational constant
+	double G = 6.67430e-11; //gravitational constant
 	State initialState;
 	float timeStep; //in ms
 	int simLength; //in ms
 	int planets;
+	double metersPerPixel;
 	double distanceCalculation(PlanetInfo p1, PlanetInfo p2) {
 		return std::sqrt(std::pow(p2.xPos - p1.xPos, 2) + std::pow(p2.yPos - p1.yPos, 2));
 	}

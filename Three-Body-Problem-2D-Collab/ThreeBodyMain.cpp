@@ -3,6 +3,7 @@
 #include <string>
 #include <tchar.h>
 #include <gdiplus.h>
+#include <memory>
 #include "Calculations.h"
 #pragma comment (lib,"Gdiplus.lib") //tells linker to add gdiplus lib automatically
 
@@ -21,6 +22,9 @@ std::vector<WNDPROC> oldProcs;
 HWND hStartSimButton;
 //Frame tracker in top left
 HWND hFrameTracker;
+HWND hPositionDisplay;
+//conversion from meters to pixels, i.e 1 pixel = __ meters
+double metersPerPixel = 1e6;
 //number of planets
 int numPlanets;
 //Time between frame updates (ms), can be changed during runtime? 17 ms = ~60 fps
@@ -46,6 +50,12 @@ Calculations* solveIVP = NULL;
 std::vector<PlanetInfo> initialVals;
 //Simulation
 std::vector<std::vector<std::pair<float, float>>> simulationResult;
+std::vector<std::unique_ptr<Gdiplus::SolidBrush>> planetBrushes;
+std::vector<std::unique_ptr<Gdiplus::Pen>> planetPens;
+std::unique_ptr<Gdiplus::Bitmap> g_backBuffer;
+std::unique_ptr<Gdiplus::Graphics> g_backG;
+int g_backWidth = 0;
+int g_backHeight = 0;
 
 //Forward declarations when funcs are called before definition
 LRESULT CALLBACK ProcessMessages(HWND, UINT, WPARAM, LPARAM);
@@ -57,6 +67,19 @@ bool IsValidInitialValues(HWND hWnd);
 void CreatePlanetInitialValues(HWND hWnd);
 void StartSimulation(HWND hWnd);
 void EndSimulation(HWND hWnd);
+
+void CreateBackBuffer(int width, int height)
+{
+	if (width <= 0 || height <= 0) return;
+	if (g_backBuffer && g_backWidth == width && g_backHeight == height) return;
+
+	g_backBuffer.reset(new Gdiplus::Bitmap(width, height, PixelFormat32bppARGB));
+	g_backG.reset(Gdiplus::Graphics::FromImage(g_backBuffer.get()));
+	g_backG->SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+
+	g_backWidth = width;
+	g_backHeight = height;
+}
 
 int WINAPI WinMain(
 	_In_ HINSTANCE hInstance,
@@ -94,7 +117,7 @@ int WINAPI WinMain(
 		WS_EX_OVERLAPPEDWINDOW, //style
 		szWindowClass, //name of application
 		szTitle, //text in title bar
-		WS_OVERLAPPEDWINDOW, //type of window to create
+		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, //type of window to create
 		CW_USEDEFAULT, CW_USEDEFAULT, //initial position (x, y)
 		1000, 500, //initial size (width, height)
 		NULL, //parent window
@@ -140,11 +163,13 @@ LRESULT CALLBACK ProcessMessages(
 	}
 	case WM_ERASEBKGND: {
 		//Redraw background in black every time InvalidateRect is called
-		HDC hdcErase = (HDC)wParam;
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		HBRUSH hBrush = (HBRUSH)GetStockObject(BLACK_BRUSH);
-		FillRect(hdcErase, &rc, hBrush);
+		if (currPhase != SIMULATION) {
+			HDC hdcErase = (HDC)wParam;
+			RECT rc;
+			GetClientRect(hWnd, &rc);
+			HBRUSH hBrush = (HBRUSH)GetStockObject(BLACK_BRUSH);
+			FillRect(hdcErase, &rc, hBrush);
+		}
 		return 1; //1 for success
 	}
 	case WM_PAINT:
@@ -159,8 +184,19 @@ LRESULT CALLBACK ProcessMessages(
 		//Function that runs 60 fps: 17 ms is ~60 fps
 		currStep++;
 		if (currStep < totalSteps) {
+			wchar_t buf[128];
+			swprintf(buf, _countof(buf), L"Current Frame: %d / %d", currStep, totalSteps);
+			SetWindowTextW(hFrameTracker, buf);
+			if (simulationResult.size() >= 2 &&
+				currStep < (int)simulationResult[0].size() &&
+				currStep < (int)simulationResult[1].size())
+			{
+				swprintf(buf, _countof(buf), L"Current pos: {%d, %d}, {%d, %d}",
+					(int)simulationResult[0][currStep].first, (int)simulationResult[0][currStep].second,
+					(int)simulationResult[1][currStep].first, (int)simulationResult[1][currStep].second);
+				SetWindowTextW(hPositionDisplay, buf);
+			}
 			InvalidateRect(hWnd, NULL, FALSE);
-			UpdateWindow(hWnd); //calls for an immediate repaint
 		}
 		else {
 			currPhase = PAUSED;
@@ -185,10 +221,17 @@ LRESULT CALLBACK ProcessMessages(
 				StartSimulation(hWnd);
 				hFrameTracker = CreateWindowEx(0, L"STATIC", L"Current Frame: " + (char)currStep, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
 					0, 0, 120, 35, hWnd, (HMENU)1, NULL, NULL);
+				hPositionDisplay = CreateWindowEx(0, L"STATIC", L"Current pos: ", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
+					0, 35, 200, 70, hWnd, (HMENU)1, NULL, NULL);
 				currPhase = SIMULATION; //after bc can't draw w/out knowing output values
 			}
 		}
 		return 0;
+	case WM_SIZE:
+		int w = LOWORD(lParam);
+		int h = HIWORD(lParam);
+		CreateBackBuffer(w, h);
+	return 0;
 	}
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -199,16 +242,39 @@ LRESULT CALLBACK ProcessMessages(
 
 void OnPaint(HDC hdc)
 {
+	Gdiplus::Graphics lineGraphics(hdc); //?
+	RECT rc;
+	GetClientRect(WindowFromDC(hdc), &rc);
+	int w = rc.right - rc.left;
+	int h = rc.bottom - rc.top;
+	CreateBackBuffer(w, h);
+	if (!g_backG || !g_backBuffer) return;
+
+	g_backG->Clear(Gdiplus::Color::Black);
+
 	if (currPhase == SIMULATION) {
-		int radius = 60;
-		HBRUSH hCurrBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
-		HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hCurrBrush);
-		Ellipse(hdc, simulationResult[0][currStep].first - radius, simulationResult[0][currStep].second - radius,
-			simulationResult[0][currStep].first + radius, simulationResult[0][currStep].second + radius);
-		SelectObject(hdc, hOldBrush);
-		wchar_t buf[128];
-		swprintf(buf, _countof(buf), L"Current Frame: %d / %d", currStep, totalSteps);
-		SetWindowTextW(hFrameTracker, buf);		
+		int radius = 8;
+		//erase the old frame
+		for (int i = 0; i < numPlanets; i++) {
+			//draw a line from the current step position to the next step position
+			for (int j = (currStep >= 50) ? currStep - 50 : 1; j < currStep; j++) {
+				if (j > 0) {
+					g_backG->DrawLine(planetPens[i].get(),
+						simulationResult[i][j - 1].first, simulationResult[i][j - 1].second, simulationResult[i][currStep].first, simulationResult[i][currStep].second);
+				}
+			}
+			float cx = simulationResult[i][currStep].first;
+			float cy = simulationResult[i][currStep].second;
+			//have to cast to REAL to get the correct overload i guess
+			if ((size_t)i < planetBrushes.size() && planetBrushes[i]) {
+				g_backG->FillEllipse(planetBrushes[i].get(), static_cast<Gdiplus::REAL>(cx - radius), static_cast<Gdiplus::REAL>(cy - radius), static_cast<Gdiplus::REAL>(radius * 2), static_cast<Gdiplus::REAL>(radius * 2));
+			} else {
+				Gdiplus::SolidBrush fallback(Gdiplus::Color::White);
+				g_backG->FillEllipse(&fallback, static_cast<Gdiplus::REAL>(cx - radius), static_cast<Gdiplus::REAL>(cy - radius), static_cast<Gdiplus::REAL>(radius * 2), static_cast<Gdiplus::REAL>(radius * 2));
+			}
+		}
+		Gdiplus::Graphics screen(hdc);
+		screen.DrawImage(g_backBuffer.get(), 0, 0);
 	}
 }
 
@@ -414,6 +480,7 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel = (startingPixel.second + 205 < clientHeight) ? std::pair<int, int> {startingPixel.first, startingPixel.second}
 			: std::pair<int, int>{ startingPixel.first + 220, 0 }; //205 = 35*5 + 30 pixels button, 220 = length of label + input box + 10
 		}
+		swprintf(buffer, 256, L"%d", 100 + (i / 5) * 100);
 		planetLabels[i] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" x-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second, 150, 35, hWnd, (HMENU)i, NULL, NULL);
 		planetLabels[i + 1] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-position:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
@@ -422,17 +489,17 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel.first, startingPixel.second + 70, 150, 35, hWnd, (HMENU)(i + 2), NULL, NULL);
 		planetLabels[i + 3] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" y-velocity:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second + 105, 150, 35, hWnd, (HMENU)(i + 3), NULL, NULL);
-		planetLabels[i + 4] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" mass (in 10^24 kgs) (recommended 1-5 range):").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
+		planetLabels[i + 4] = CreateWindowEx(0, L"STATIC", (L"Planet " + number + L" mass:").c_str(), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_CENTER,
 			startingPixel.first, startingPixel.second + 140, 150, 35, hWnd, (HMENU)(i + 4), NULL, NULL);
-		planetInputBoxes[i] = CreateWindow(L"EDIT", L"500", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i] = CreateWindow(L"EDIT", buffer, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second, 60, 35, hWnd, (HMENU)(i + 5), NULL, NULL);
-		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", L"500", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 1] = CreateWindow(L"EDIT", buffer, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 35, 60, 35, hWnd, (HMENU)(i + 6), NULL, NULL);
 		planetInputBoxes[i + 2] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 70, 60, 35, hWnd, (HMENU)(i + 7), NULL, NULL);
-		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", L"5", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 105, 60, 35, hWnd, (HMENU)(i + 8), NULL, NULL);
-		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"10", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"4", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 140, 60, 35, hWnd, (HMENU)(i + 9), NULL, NULL);
 		//subclass each edit box
 		for (int j = 0; j < 5; j++) {
@@ -499,16 +566,19 @@ void StartSimulation(HWND hWnd) {
 		char szBufYVel[2048];
 		char szBufMass[2048];
 		GetWindowTextA(planetInputBoxes[currInputIndex], szBufXPos, GetWindowTextLength(planetInputBoxes[currInputIndex]) + 1);
-		GetWindowTextA(planetInputBoxes[currInputIndex + 1], szBufXPos, GetWindowTextLength(planetInputBoxes[currInputIndex + 1]) + 1);
-		GetWindowTextA(planetInputBoxes[currInputIndex + 2], szBufXPos, GetWindowTextLength(planetInputBoxes[currInputIndex + 2]) + 1);
-		GetWindowTextA(planetInputBoxes[currInputIndex + 3], szBufXPos, GetWindowTextLength(planetInputBoxes[currInputIndex + 3]) + 1);
-		GetWindowTextA(planetInputBoxes[currInputIndex + 4], szBufXPos, GetWindowTextLength(planetInputBoxes[currInputIndex + 4]) + 1);
+		GetWindowTextA(planetInputBoxes[currInputIndex + 1], szBufYPos, GetWindowTextLength(planetInputBoxes[currInputIndex + 1]) + 1);
+		GetWindowTextA(planetInputBoxes[currInputIndex + 2], szBufXVel, GetWindowTextLength(planetInputBoxes[currInputIndex + 2]) + 1);
+		GetWindowTextA(planetInputBoxes[currInputIndex + 3], szBufYVel, GetWindowTextLength(planetInputBoxes[currInputIndex + 3]) + 1);
+		GetWindowTextA(planetInputBoxes[currInputIndex + 4], szBufMass, GetWindowTextLength(planetInputBoxes[currInputIndex + 4]) + 1);
 		int xPos = std::stoi(szBufXPos);
-		int yPos = std::stoi(szBufXPos);
-		float xVel = std::stof(szBufXPos);
-		float yVel = std::stof(szBufXPos);
-		float mass = std::stof(szBufXPos);
-		initialVals[i] = PlanetInfo(xPos, yPos, xVel, yVel, mass);
+		int yPos = std::stoi(szBufYPos);
+		float xVel = std::stof(szBufXVel);
+		float yVel = std::stof(szBufYVel);
+		float mass = std::stof(szBufMass);
+		double xPosMeters = xPos * metersPerPixel;
+		double yPosMeters = yPos * metersPerPixel;
+		double massKG = mass * 1e24;
+		initialVals[i] = PlanetInfo(xPosMeters, yPosMeters, xVel, yVel, massKG);
 		for (int j = 0; j < 5; j++) {
 			DestroyWindow(planetInputBoxes[currInputIndex + j]);
 			DestroyWindow(planetLabels[currInputIndex + j]);
@@ -518,6 +588,18 @@ void StartSimulation(HWND hWnd) {
 		DestroyWindow(hErrorMsg);
 	}
 	DestroyWindow(hStartSimButton);
+	std::vector<COLORREF> rgbValues =
+	{ RGB(0, 102, 204),  RGB(204, 0, 0), RGB(0, 255, 0), RGB(0, 204, 204), RGB(204, 0, 204), RGB(255, 255, 255),
+		RGB(204, 0, 102), RGB(102, 0, 204), RGB(0, 204, 102), RGB(0, 0, 204), RGB(102, 0, 0), RGB(0, 102, 51) };
+	for (int i = 0; i < numPlanets; i++) {
+		//create pens and brushes for each planet
+		COLORREF cref = rgbValues[i];
+		Gdiplus::Color c(255, GetRValue(cref), GetGValue(cref), GetBValue(cref));
+		planetBrushes.push_back(std::make_unique<Gdiplus::SolidBrush>(c));
+		planetPens.push_back(std::make_unique<Gdiplus::Pen>(c, 1.5f));
+	}
+
+	solveIVP->setMetersPerPixel(metersPerPixel);
 	solveIVP->setInitialValues(initialVals);
 	simulationResult = solveIVP->solve();
 }
@@ -525,4 +607,5 @@ void StartSimulation(HWND hWnd) {
 void EndSimulation(HWND hWnd) {
 	KillTimer(hWnd, 1);
 	DestroyWindow(hFrameTracker);
+	DestroyWindow(hPositionDisplay);
 }

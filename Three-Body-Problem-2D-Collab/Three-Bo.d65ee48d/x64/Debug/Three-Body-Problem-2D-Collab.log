@@ -1,59 +1,23 @@
 ﻿  ThreeBodyMain.cpp
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(10,8): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(73,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'ThreeBodyMain.cpp')
   
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(10,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(74,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'ThreeBodyMain.cpp')
   
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(63,53): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'ThreeBodyMain.cpp')
-  
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(64,53): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'ThreeBodyMain.cpp')
-  
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(67,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'ThreeBodyMain.cpp')
-  
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(68,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'ThreeBodyMain.cpp')
-  
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,87): warning C4244: 'argument': conversion from '_Ty2' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,87): warning C4244:         with
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,87): warning C4244:         [
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,87): warning C4244:             _Ty2=float
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,87): warning C4244:         ]
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,40): warning C4244: 'argument': conversion from '_Ty1' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,40): warning C4244:         with
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,40): warning C4244:         [
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,40): warning C4244:             _Ty1=float
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(207,40): warning C4244:         ]
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,99): warning C4244: 'argument': conversion from '_Ty2' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,99): warning C4244:         with
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,99): warning C4244:         [
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,99): warning C4244:             _Ty2=float
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,99): warning C4244:         ]
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,52): warning C4244: 'argument': conversion from '_Ty1' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,52): warning C4244:         with
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,52): warning C4244:         [
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,52): warning C4244:             _Ty1=float
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(206,52): warning C4244:         ]
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(216,12): warning C4244: 'initializing': conversion from 'LONG_PTR' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(362,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(364,26): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(366,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(418,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(420,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(422,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(424,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(426,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(427,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(429,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(431,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(433,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(435,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(490,20): warning C4244: 'argument': conversion from 'float' to 'UINT', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(500,8): warning C4101: 'szBufMass': unreferenced local variable
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(498,8): warning C4101: 'szBufXVel': unreferenced local variable
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(499,8): warning C4101: 'szBufYVel': unreferenced local variable
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(497,8): warning C4101: 'szBufYPos': unreferenced local variable
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(282,12): warning C4244: 'initializing': conversion from 'LONG_PTR' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(428,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(430,26): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(432,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(485,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(487,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(489,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(491,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(493,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(494,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(496,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(498,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(500,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(502,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(557,20): warning C4244: 'argument': conversion from 'float' to 'UINT', possible loss of data
   Three-Body-Problem-2D-Collab.vcxproj -> C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\x64\Debug\Three-Body-Problem-2D-Collab.exe
