@@ -115,7 +115,7 @@ int WINAPI WinMain(
 	}
 	windowLength = GetSystemMetrics(SM_CXFULLSCREEN);
 	windowHeight = GetSystemMetrics(SM_CYFULLSCREEN);
-	centerX = windowLength / 2 - 110; //110 is half of total width of initial boxes
+	centerX = windowLength / 2;
 	centerY = windowHeight / 2;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
@@ -321,19 +321,19 @@ LRESULT CALLBACK CustomEditProc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lPar
 void CreateInitialWindows(HWND hWnd) {
 	//Create ctrls. ORDER OF TEXT BOXES IS IMPORTANT HERE.
 	hLabel1 = CreateWindowEx(0, L"STATIC", L"# of Planets", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
-		centerX, 10, 160, 25, hWnd, (HMENU)1, NULL, NULL);
-	hLabel2 = CreateWindowEx(0, L"STATIC", L"Fps (60 recommended)", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
-		centerX, 45, 160, 25, hWnd, (HMENU)2, NULL, NULL);
+		centerX - 110, 10, 220, 25, hWnd, (HMENU)1, NULL, NULL);
+	hLabel2 = CreateWindowEx(0, L"STATIC", L"Frames per simulation second (30-60 recommended, more means a slower simulation and vice versa)", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
+		centerX - 110, 45, 220, 70, hWnd, (HMENU)2, NULL, NULL);
 	hLabel3 = CreateWindowEx(0, L"STATIC", L"Sim length (s)", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
-		centerX, 80, 160, 25, hWnd, (HMENU)3, NULL, NULL);
-	hEdit1 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-		centerX + 160, 10, 60, 25, hWnd, (HMENU)4, NULL, NULL);
-	hEdit2 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-		centerX + 160, 45, 60, 25, hWnd, (HMENU)5, NULL, NULL);
-	hEdit3 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
-		centerX + 160, 80, 60, 25, hWnd, (HMENU)6, NULL, NULL);
-	hButton = CreateWindow(L"BUTTON", L"Create", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
-		centerX + 160, 115, 60, 30, hWnd, (HMENU)7, NULL, NULL);
+		centerX - 110, 125, 220, 25, hWnd, (HMENU)3, NULL, NULL);
+	hEdit1 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP |  ES_AUTOHSCROLL | ES_RIGHT,
+		centerX + 110, 10, 60, 25, hWnd, (HMENU)4, NULL, NULL);
+	hEdit2 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL | ES_RIGHT,
+		centerX + 110, 67, 60, 25, hWnd, (HMENU)5, NULL, NULL);
+	hEdit3 = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL | ES_RIGHT,
+		centerX + 110, 125, 60, 25, hWnd, (HMENU)6, NULL, NULL);
+	hButton = CreateWindow(L"BUTTON", L"Create", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
+		centerX + 110, 160, 60, 30, hWnd, (HMENU)7, NULL, NULL);
 	SetWindowLongPtr(hEdit2, GWLP_USERDATA, 0);
 	WNDPROC oldProc = (WNDPROC)SetWindowLongPtr(hEdit2, GWLP_WNDPROC, (LONG_PTR)CustomEditProc);
 	oldProcs.push_back(oldProc);
@@ -359,7 +359,7 @@ bool SpecialCaseForDecimals(HWND textBox, int startY) {
 			DestroyWindow(hErrorMsg);
 		}
 		hErrorMsg = CreateWindowEx(0, L"STATIC", L"You missed a box", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-			centerX, startY, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
+			centerX - 110, startY, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
 		return false;
 	}
 	if (allZeroes) {
@@ -367,7 +367,7 @@ bool SpecialCaseForDecimals(HWND textBox, int startY) {
 			DestroyWindow(hErrorMsg);
 		}
 		hErrorMsg = CreateWindowEx(0, L"STATIC", L"Don't just put in zeroes asshole", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-			centerX, startY, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
+			centerX - 110, startY, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
 		return false;
 	}
 	return !allZeroes;
@@ -389,7 +389,7 @@ bool IsValidNumberEntry(HWND textBox) {
 				DestroyWindow(hErrorMsg);
 			}
 			hErrorMsg = CreateWindowEx(0, L"STATIC", L"Invalid entry", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-				centerX, 115, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
+				centerX - 110, 115, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
 			return false;
 		}
 		if (szBuf[i] != '0') {
@@ -401,7 +401,7 @@ bool IsValidNumberEntry(HWND textBox) {
 			DestroyWindow(hErrorMsg);
 		}
 		hErrorMsg = CreateWindowEx(0, L"STATIC", L"You missed a box", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-			centerX, 115, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
+			centerX - 110, 115, 150, 25, GetParent(textBox), (HMENU)8, NULL, NULL);
 		return false;
 	}
 	//This is after length so it doesn't give the error for empty box
@@ -410,7 +410,7 @@ bool IsValidNumberEntry(HWND textBox) {
 			DestroyWindow(hErrorMsg);
 		}
 		hErrorMsg = CreateWindowEx(0, L"STATIC", L"Don't just put in zeroes asshole", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-			centerX, 115, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
+			centerX - 110, 115, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
 		return false;
 	}
 	if (textBox == hEdit1) {
@@ -421,7 +421,7 @@ bool IsValidNumberEntry(HWND textBox) {
 				DestroyWindow(hErrorMsg);
 			}
 			hErrorMsg = CreateWindowEx(0, L"STATIC", L"# of planets must be 2-10", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
-				centerX, 115, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
+				centerX -110, 115, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
 			return false;
 		}
 	}
