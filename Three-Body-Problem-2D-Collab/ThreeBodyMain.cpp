@@ -87,7 +87,7 @@ void CreateBackBuffer(int width, int height)
 	g_backG.reset(Gdiplus::Graphics::FromImage(g_backBuffer.get()));
 	g_backG->SetSmoothingMode(Gdiplus::SmoothingModeNone);
 	g_backG->SetCompositingQuality(Gdiplus::CompositingQualityHighSpeed);
-	//g_backG->SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
+	g_backG->SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
 
 	g_backWidth = width;
 	g_backHeight = height;
@@ -325,7 +325,7 @@ LRESULT CALLBACK CustomEditProc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lPar
 
 void CreateInitialWindows(HWND hWnd) {
 	//Create ctrls. ORDER OF TEXT BOXES IS IMPORTANT HERE.
-	hLabel1 = CreateWindowEx(0, L"STATIC", L"# of Planets", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
+	hLabel1 = CreateWindowEx(0, L"STATIC", L"# of Planets (2-15)", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
 		centerX - 110, 10, 220, 20, hWnd, (HMENU)1, NULL, NULL);
 	hLabel2 = CreateWindowEx(0, L"STATIC", L"Frames per simulation second (more increases accuracy and simulation speed, 2-10 recommended)", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
 		centerX - 110, 40, 220, 70, hWnd, (HMENU)2, NULL, NULL);
@@ -428,11 +428,11 @@ bool IsValidNumberEntry(HWND textBox) {
 	if (textBox == hEdit1) {
 		//number of planets special case
 		int numPlanetsCheck = std::stoi(std::string(szBuf));
-		if (numPlanetsCheck < 2 || numPlanetsCheck > 10) {
+		if (numPlanetsCheck < 2 || numPlanetsCheck > 15) {
 			if (hErrorMsg != NULL) {
 				DestroyWindow(hErrorMsg);
 			}
-			hErrorMsg = CreateWindowEx(0, L"STATIC", L"# of planets must be 2-10", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
+			hErrorMsg = CreateWindowEx(0, L"STATIC", L"# of planets must be 2-15", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER,
 				centerX -110, 210, 150, 35, GetParent(textBox), (HMENU)8, NULL, NULL);
 			return false;
 		}
@@ -704,7 +704,8 @@ void StartSimulation(HWND hWnd) {
 	DestroyWindow(hStartSimButton);
 	std::vector<COLORREF> rgbValues =
 	{ RGB(0, 102, 204),  RGB(204, 0, 0), RGB(0, 255, 0), RGB(0, 204, 204), RGB(204, 0, 204), RGB(255, 255, 255),
-		RGB(204, 0, 102), RGB(102, 0, 204), RGB(0, 204, 102), RGB(0, 0, 204), RGB(102, 0, 0), RGB(0, 102, 51) };
+		RGB(204, 0, 102), RGB(102, 0, 204), RGB(0, 204, 102), RGB(0, 0, 204), RGB(102, 0, 0), RGB(0, 102, 51),
+		RGB(153, 255, 255), RGB(255, 102, 178), RGB(76, 0, 153)};
 	for (int i = 0; i < numPlanets; i++) {
 		//create pens and brushes for each planet
 		COLORREF cref = rgbValues[i];

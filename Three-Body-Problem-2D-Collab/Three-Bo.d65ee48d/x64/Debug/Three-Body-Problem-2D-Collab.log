@@ -28,5 +28,5 @@ C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeB
 C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(612,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
 C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(614,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
 C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(616,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(719,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(720,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Three-Body-Problem-2D-Collab.vcxproj -> C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\x64\Debug\Three-Body-Problem-2D-Collab.exe
