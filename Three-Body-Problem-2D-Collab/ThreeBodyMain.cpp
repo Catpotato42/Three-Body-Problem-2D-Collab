@@ -220,7 +220,7 @@ LRESULT CALLBACK ProcessMessages(
 			if (nextPhase) {
 				StartSimulation(hWnd);
 				hFrameTracker = CreateWindowEx(0, L"STATIC", L"Current Frame: " + (char)currStep, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
-					0, 0, 120, 35, hWnd, (HMENU)1, NULL, NULL);
+					0, 0, 170, 35, hWnd, (HMENU)1, NULL, NULL);
 				hPositionDisplay = CreateWindowEx(0, L"STATIC", L"Current pos: ", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER,
 					0, 35, 200, 70, hWnd, (HMENU)1, NULL, NULL);
 				currPhase = SIMULATION; //after bc can't draw w/out knowing output values
@@ -497,11 +497,7 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel = (startingPixel.second + 205 < clientHeight) ? std::pair<int, int> {startingPixel.first, startingPixel.second}
 			: std::pair<int, int>{ startingPixel.first + 220, 0 }; //205 = 35*5 + 30 pixels button, 220 = length of label + input box + 10
 		}
-<<<<<<< HEAD
-		int yVel = ((i / 5) % 3 == 0) ? 3000000 : (((i / 5) % 3 == 1) ? 0 : -3000000); //0 = + vel, 1 = no vel, 2 = - vel, 3 = + vel...
-=======
-		int yVel = ((i / 5) % 3 == 0) ? 7000000 : (((i / 5) % 3 == 1) ? 0 : -7000000); //0 = + vel, 1 = no vel, 2 = - vel, 3 = + vel...
->>>>>>> b6c47b1ae98c4767bdb18eba0b7acf34edc50418
+		int yVel = ((i / 5) % 3 == 0) ? 1000 : (((i / 5) % 3 == 1) ? 0 : -1000); //0 = + vel, 1 = no vel, 2 = - vel, 3 = + vel...
 		swprintf(szBufXPos, 256, L"%d", 300 + (i / 5) * 100);
 		swprintf(szBufYPos, 256, L"%d", 500);
 		swprintf(szBufXVel, 256, L"%d", 0);
@@ -524,7 +520,7 @@ void CreatePlanetInitialValues(HWND hWnd) {
 			startingPixel.first + 150, startingPixel.second + 70, 70, 35, hWnd, (HMENU)(i + 7), NULL, NULL);
 		planetInputBoxes[i + 3] = CreateWindow(L"EDIT", szBufYVel, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 105, 70, 35, hWnd, (HMENU)(i + 8), NULL, NULL);
-		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"1", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
+		planetInputBoxes[i + 4] = CreateWindow(L"EDIT", L"6", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL | ES_RIGHT,
 			startingPixel.first + 150, startingPixel.second + 140, 70, 35, hWnd, (HMENU)(i + 9), NULL, NULL);
 		//subclass each edit box
 		for (int j = 0; j < 5; j++) {

@@ -57,8 +57,8 @@ public:
 					double distance = distanceCalculation(initialState.states[j], initialState.states[i]);
 					if (distance != 0) {
 						//calculate accelerations
-						netAccelerationY += G * (initialState.states[j].mass * (initialState.states[j].yPos - initialState.states[i].yPos) / std::pow(distance, 2));
-						netAccelerationX += G * (initialState.states[j].mass * (initialState.states[j].xPos - initialState.states[i].xPos) / std::pow(distance, 2));
+						netAccelerationY += G * (initialState.states[j].mass * (initialState.states[j].yPos - initialState.states[i].yPos) / std::pow(distance, 3));
+						netAccelerationX += G * (initialState.states[j].mass * (initialState.states[j].xPos - initialState.states[i].xPos) / std::pow(distance, 3));
 					
 					}
 				}
@@ -80,11 +80,7 @@ public:
 		return solution;
 	}
 private:
-<<<<<<< HEAD
-	double G = 6.67430e-9; //gravitational constant
-=======
 	double G = 6.67430e-11; //gravitational constant
->>>>>>> b6c47b1ae98c4767bdb18eba0b7acf34edc50418
 	State initialState;
 	float timeStep; //in ms
 	int simLength; //in ms
