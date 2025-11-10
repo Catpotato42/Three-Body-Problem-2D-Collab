@@ -25,12 +25,7 @@
 *.VC.VC.opendb
 
 # Build output directories
-Debug/
-Release/
-x64/
-Win32/
-bin/
-obj/
+
 
 # Temporary files
 *.~
