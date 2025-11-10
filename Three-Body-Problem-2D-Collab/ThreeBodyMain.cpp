@@ -195,34 +195,39 @@ LRESULT CALLBACK ProcessMessages(
 		hdc = BeginPaint(hWnd, &ps);
 		OnPaint(hdc);
 		EndPaint(hWnd, &ps);
+		if (currPhase == SIMULATION && currStep < totalSteps)
+			SetTimer(hWnd, 1, 10, NULL);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	case WM_TIMER:
-		//Function that runs __ fps: 1000/fps = ms between frames. Timer set at the end of StartSimulation.
-		currStep++;
-		if (currStep < totalSteps) {
-			wchar_t buf[128];
-			swprintf(buf, _countof(buf), L"Current Frame: %d / %d", currStep, totalSteps);
-			SetWindowTextW(hFrameTracker, buf);
-			if (simulationResult.size() >= 2 &&
-				currStep < (int)simulationResult[0].size() &&
-				currStep < (int)simulationResult[1].size() && 
-				hPositionDisplay != NULL)
-			{
-				swprintf(buf, _countof(buf), L"Current pos: {%d, %d}, {%d, %d}",
-					(int)simulationResult[0][currStep].first, (int)simulationResult[0][currStep].second,
-					(int)simulationResult[1][currStep].first, (int)simulationResult[1][currStep].second);
-				SetWindowTextW(hPositionDisplay, buf);
+		if (currPhase == SIMULATION) {
+			KillTimer(hWnd, 1);
+			//Function that runs __ fps: 1000/fps = ms between frames. Timer set at the end of StartSimulation.
+			currStep++;
+			if (currStep < totalSteps) {
+				wchar_t buf[128];
+				swprintf(buf, _countof(buf), L"Current Frame: %d / %d", currStep, totalSteps);
+				SetWindowTextW(hFrameTracker, buf);
+				if (simulationResult.size() >= 2 &&
+					currStep < (int)simulationResult[0].size() &&
+					currStep < (int)simulationResult[1].size() &&
+					hPositionDisplay != NULL)
+				{
+					swprintf(buf, _countof(buf), L"Current pos: {%d, %d}, {%d, %d}",
+						(int)simulationResult[0][currStep].first, (int)simulationResult[0][currStep].second,
+						(int)simulationResult[1][currStep].first, (int)simulationResult[1][currStep].second);
+					SetWindowTextW(hPositionDisplay, buf);
+				}
+				InvalidateRect(hWnd, NULL, FALSE);
 			}
-			InvalidateRect(hWnd, NULL, FALSE);
+			else {
+				currPhase = PAUSED;
+				EndSimulation(hWnd);
+			}
+			//draw next frame
 		}
-		else {
-			currPhase = PAUSED;
-			EndSimulation(hWnd);
-		}
-		//draw next frame
 		return 0;
 	case WM_COMMAND: {
 		//The difference between the way I implemented the first two phase changes is unfortunate.
@@ -365,7 +370,7 @@ void CreateInitialWindows(HWND hWnd) {
 		centerX + 110, 40, 60, 20, hWnd, (HMENU)5, NULL, NULL);
 	hEdit3 = CreateWindowEx(0, L"EDIT", L"200", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL | ES_RIGHT,
 		centerX + 110, 120, 60, 20, hWnd, (HMENU)6, NULL, NULL);
-	hEdit4 = CreateWindowEx(0, L"EDIT", L"1", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL | ES_RIGHT,
+	hEdit4 = CreateWindowEx(0, L"EDIT", L"3", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL | ES_RIGHT,
 		centerX + 110, 165, 60, 20, hWnd, (HMENU)7, NULL, NULL);
 	hButton = CreateWindow(L"BUTTON", L"Create", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
 		centerX + 110, 230, 60, 30, hWnd, (HMENU)8, NULL, NULL); //ID 8 used in WM_BUTTON
@@ -772,7 +777,7 @@ void StartSimulation(HWND hWnd) {
 	solveIVP->setInitialValues(initialVals);
 	simulationResult = solveIVP->solve();
 	totalSteps = simulationResult[0].size();
-	SetTimer(hWnd, 1, 34, (TIMERPROC)NULL); //34 ms -> 30 fps
+	SetTimer(hWnd, 1, 0, (TIMERPROC)NULL);
 }
 
 void EndSimulation(HWND hWnd) {

@@ -5,29 +5,29 @@ C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calcul
 C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\Calculations.h(86,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'ThreeBodyMain.cpp')
   
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(325,12): warning C4244: 'initializing': conversion from 'LONG_PTR' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(493,22): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(556,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(558,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(560,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(562,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(564,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(565,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(567,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(569,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(571,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(573,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(632,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(634,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(636,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(638,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(640,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(641,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(643,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(645,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(647,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(649,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(774,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(330,12): warning C4244: 'initializing': conversion from 'LONG_PTR' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(498,22): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(561,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(563,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(565,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(567,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(569,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(570,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(572,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(574,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(576,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(578,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(637,62): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(639,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(641,67): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(643,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(645,68): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(646,25): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(648,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(650,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(652,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(654,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+C:\c++_programs\Three-Body-Problem-2D-Collab\Three-Body-Problem-2D-Collab\ThreeBodyMain.cpp(779,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\utility(274,16): warning C4244: 'initializing': conversion from '_Ty' to '_Ty1', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\utility(274,16): warning C4244:         with
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\utility(274,16): warning C4244:         [
